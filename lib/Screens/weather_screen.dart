@@ -4,7 +4,8 @@ import 'package:weather_app/Data/weather.dart';
 const apiKey = "f96dba3b75e7751664320b04d829142b";
 
 class WeatherScreen extends StatefulWidget {
-  WeatherScreen({Key? key,
+  WeatherScreen({
+    Key? key,
     required this.cityName,
     required this.temp,
   }) : super(key: key);
@@ -18,7 +19,6 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class WeatherScreenState extends State<WeatherScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -26,7 +26,7 @@ class WeatherScreenState extends State<WeatherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String? newCityName ;
+    String? newCityName;
     WeatherData weatherData = WeatherData();
     return Scaffold(
       body: Center(
@@ -61,13 +61,20 @@ class WeatherScreenState extends State<WeatherScreen> {
                 ),
                 OutlinedButton(
                   onPressed: () async {
-                    if(newCityName !=null){
+                    if (newCityName != null) {
                       var temporary =
-                      await weatherData.getCityWeather(newCityName!);
+                          await weatherData.getCityWeather(newCityName!);
                       if (temporary.toString() == 404.toString()) {
                         var snackBar = const SnackBar(
                           duration: Duration(seconds: 2),
                           content: Text("location not found"),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      if (newCityName == null || newCityName == "") {
+                        var snackBar = const SnackBar(
+                          duration: Duration(seconds: 2),
+                          content: Text("Pls enter a location"),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       } else {
@@ -76,13 +83,6 @@ class WeatherScreenState extends State<WeatherScreen> {
                           widget.temp = temporary["main"]["temp"];
                         });
                       }
-                    }
-                    if(newCityName == null || newCityName == ""){
-                      var snackBar = const SnackBar(
-                        duration: Duration(seconds: 2),
-                        content: Text("Pls enter a location"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   },
                   child: const Text("enter"),
